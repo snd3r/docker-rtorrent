@@ -1,0 +1,7 @@
+#!/bin/sh
+
+(sleep 10;
+# remove broken symlinks
+find -L /data/Media/ -type l -exec rm -- {} +;
+# remove empty folders
+find /data/Media/ -mindepth 2 -type d -empty -exec rm -r {} \;) >> /tmp/postrm.log &

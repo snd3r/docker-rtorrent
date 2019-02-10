@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+  flood:
+    restart: always
+    container_name: rtorrent-flood
+    image: edf95656220b
+    environment:
+      - UID=1000
+      - GID=1000 
+      - PORT_RANGE=50000-50000
+      - DHT_MODE=auto
+      - DHT_PORT=7000
+      - PROTO_PEX=yes
+      - PROTO_UDP=yes
+      - FLOOD_SECRET=storm
+      - FLOOD_BASE_URI='/'
+      - FLOOD_PORT=3000
+    tty: true
+    ports:
+      - "50000:50000/tcp"
+      - "7000:7000/udp"
+      - "3000:3000/tcp"
+    volumes:
+      - /srv/rtorrent/share:/data
+      - /srv/rtorrent/db:/flood-db
+      - /srv/rtorrent/rootfs/home/torrent/:/home/torrent/
+    networks:
+      - "torrent"
+
+networks:
+    torrent:
+        driver: bridge

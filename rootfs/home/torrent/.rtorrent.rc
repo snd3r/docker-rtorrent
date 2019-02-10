@@ -1,0 +1,59 @@
+## https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning
+
+## Run the rTorrent process as a daemon in the background
+system.daemon.set = true
+network.scgi.open_local = /tmp/rtorrent.sock
+execute.nothrow = chmod,770,(cat,(session.path),rpc.socket)
+
+## Setting codepage for xmlrpc
+encoding.add = UTF-8
+
+## Listening port for incoming peer traffic
+network.port_range.set = 50000-50000
+network.port_random.set = no
+
+## Limits for file handle resources
+network.http.max_open.set = 50
+network.max_open_files.set = 600
+network.max_open_sockets.set = 300
+
+## Memory resource usage
+network.xmlrpc.size_limit.set = 4M
+
+## DNS cache
+network.http.dns_cache_timeout.set = 25
+
+## DHT
+dht.mode.set = auto
+dht.port.set = 7000
+
+## Tracker-less
+protocol.pex.set = yes
+
+## Ecryption
+protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
+
+## Peer settings
+throttle.max_uploads.set = 100
+throttle.max_uploads.global.set = 250
+throttle.min_peers.normal.set = 20
+throttle.max_peers.normal.set = 60
+throttle.min_peers.seed.set = 30
+throttle.max_peers.seed.set = 80
+
+trackers.use_udp.set = yes
+trackers.numwant.set = 80
+
+## Paths
+session.path.set = /data/.session
+directory.default.set = /data/torrents
+
+## Scheduled tasks
+schedule = watch_directory,1,1,"load.start=/data/.watch/*.torrent"
+schedule = untied_directory,5,5,"stop_untied=/data/.watch/*.torrent"
+schedule = scgi_permission,0,0,"execute.nothrow=chmod,\"g+w,o=\",/tmp/rtorrent.sock"
+schedule = insufficient_disk_space,1,30,close_low_diskspace=500M
+
+method.set_key=event.download.erased,filebot_cleaner,"execute.nothrow.bg={/usr/local/bin/postrm}"
+method.set_key=event.download.finished,filebot,"execute.nothrow.bg={/usr/local/bin/postdl,$d.base_path=,$d.name=,$d.custom1=}"
+method.set_key=event.download.inserted_new,loaded_time,"d.custom.set=addtime,$cat=$system.time=;d.save_full_session="

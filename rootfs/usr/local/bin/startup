@@ -1,0 +1,41 @@
+#!/bin/sh
+
+mkdir -p /data/torrents
+mkdir -p /data/Media/Movies
+mkdir -p /data/Media/Music
+mkdir -p /data/Media/TV
+mkdir -p /data/Media/Animes
+mkdir -p /data/.watch
+mkdir -p /data/.session
+
+rm -f /data/.session/rtorrent.lock
+
+if [ ${SCGI_PATH} ]; then
+    sed -i -e 's|^network\.scgi\.open_local.*$|network.scgi.open_local = '${SCGI_PATH}'|' /home/torrent/.rtorrent.rc
+fi
+
+if [ ${PORT_RANGE} ]; then
+    sed -i -e 's|^network\.port_range\.*$|network.port_range.set = '${PORT_RANGE}'|' /home/torrent/.rtorrent.rc
+fi
+
+if [ ${DHT_MODE} ]; then
+    sed -i -e 's|^dht\.mode\.set.*$|dht.mode.set = '${DHT_MODE}'|' /home/torrent/.rtorrent.rc
+    if [ ${DHT_PORT} ]; then
+        sed -i -e 's|^dht\.port.*$|dht.port.set = '${DHT_PORT}'|' /home/torrent/.rtorrent.rc
+    fi
+fi
+
+if [ ${PROTO_PEX} ]; then
+    sed -i -e 's|^protocol\.pex.*$|protocol.pex.set = '${PROTO_PEX}'|' /home/torrent/.rtorrent.rc
+fi
+
+if [ ${PROTO_UDP} ]; then
+    sed -i -e 's|^trackers\.use_udp.*$|trackers.use_udp.set = '${PROTO_UDP}'|' /home/torrent/.rtorrent.rc
+fi
+
+chown -R $UID:$GID /usr/local/bin /data /filebot /home/torrent /tmp /srv/flood /flood-db
+chmod +x /usr/local/bin/startup
+chmod +x /usr/local/bin/postdl
+chmod +x /usr/local/bin/postrm
+
+exec su-exec $UID:$GID /sbin/tini -- $@
