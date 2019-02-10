@@ -3,8 +3,7 @@ FROM alpine:3.8
 ARG FLOOD_VER=master
 ARG BUILD_CORES
 
-ENV UID=991 GID=991 \
-    UID=65534 \
+ENV UID=65534 \
     GID=65534 \
     SCGI_PATH=/tmp/rtorrent.sock \
     PORT_RANGE=50000-50000 \

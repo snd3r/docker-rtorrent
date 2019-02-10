@@ -4,7 +4,7 @@ services:
   flood:
     restart: always
     container_name: rtorrent-flood
-    image: edf95656220b
+    image: snd3r/docker-rtorrent:latest
     environment:
       - UID=1000
       - GID=1000 

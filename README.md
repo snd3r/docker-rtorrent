@@ -13,7 +13,7 @@
 
 - **UID** : user id (default : 991)
 - **GID** : group id (defaut : 991)
-- **FLOOD_SECRET** : flood secret key (defaut : mysupersecretkey) (CHANGE IT)
+- **FLOOD_SECRET** : flood secret key (defaut : storm) (CHANGE IT)
 - **FLOOD_BASE_URI** : context path (base_URI) (default : /)
 
 See docker-compose.yml for example.
