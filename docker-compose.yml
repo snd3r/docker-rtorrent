@@ -22,9 +22,8 @@ services:
       - "7000:7000/udp"
       - "3000:3000/tcp"
     volumes:
-      - /srv/rtorrent/share:/data
       - /srv/rtorrent/db:/flood-db
-      - /srv/rtorrent/rootfs/home/torrent/:/home/torrent/
+      - /srv/rtorrent/share:/data
     networks:
       - "torrent"
 
